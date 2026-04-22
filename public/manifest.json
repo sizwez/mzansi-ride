@@ -1,0 +1,30 @@
+{
+  "short_name": "Mzansi Ride",
+  "name": "Mzansi Ride Cooperative Mobility",
+  "description": "The South African Third Way: Driver-owned, safe, and reliable transport.",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0A0E1A",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#0A0E1A",
+  "shortcuts": [
+    {
+      "name": "Rider Dashboard",
+      "url": "/rider",
+      "icons": [{ "src": "/icon.png", "sizes": "512x512" }]
+    },
+    {
+      "name": "Driver Dashboard",
+      "url": "/driver",
+      "icons": [{ "src": "/icon.png", "sizes": "512x512" }]
+    }
+  ]
+}
