@@ -3,7 +3,16 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     unoptimized: true, // For better local performance and compatibility with some SADC loaders
-    domains: ['supabase.co', 'lh3.googleusercontent.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+    ],
   },
   // Optimization headers for SADC / Rural 3G
   async headers() {
