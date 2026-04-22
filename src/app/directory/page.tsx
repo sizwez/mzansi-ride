@@ -63,8 +63,6 @@ export default function DirectoryPage() {
         <MapView 
           center={[-26.2041, 28.0473]} 
           zoom={12} 
-          showDriverOverlay={false}
-          className="directory-map"
         />
         
         {/* Safety Legend Overlay */}
