@@ -12,7 +12,8 @@ import {
   RefreshCw,
   Zap,
   Building2,
-  PieChart
+  PieChart,
+  Check
 } from 'lucide-react';
 import { TreasuryService, AdminService } from '@/services/api';
 
