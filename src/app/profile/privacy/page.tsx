@@ -19,7 +19,7 @@ import { IdentityService } from '@/services/api';
 import Link from 'next/link';
 
 export default function PrivacyDashboard() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [settings, setSettings] = useState<any>({
     show_trip_history: true,
     share_location_with_rank: true,
@@ -30,10 +30,10 @@ export default function PrivacyDashboard() {
   const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
-    if (user?.privacy_settings) {
-      setSettings(user.privacy_settings);
+    if (profile?.privacy_settings) {
+      setSettings(profile.privacy_settings);
     }
-  }, [user]);
+  }, [profile]);
 
   const handleToggle = async (key: string) => {
     const newSettings = { ...settings, [key]: !settings[key] };

@@ -2,18 +2,19 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { Search, MapPin, ChevronRight, Star, Shield, Clock, Navigation, X, Car, AlertTriangle, Phone, Trophy, Scale, Package } from 'lucide-react';
+import { Search, MapPin, ChevronRight, Star, Shield, Clock, Navigation, X, Car, AlertTriangle, Phone, Trophy, Scale, Package, Zap } from 'lucide-react';
 import { SA_LOCATIONS } from '@/lib/mock-data';
 import { calculateFare, formatCurrency, estimateDistance, estimateDuration } from '@/lib/fare-calculator';
 import type { VehicleType, Location, Driver } from '@/types';
 import { useAuth } from '@/context/AuthContext';
-import { RiderService, SafetyService, RewardsService, CallService, WhatsAppService, LogisticsService, SyncService } from '@/services/api';
+import { RiderService, SafetyService, RewardsService, CallService, WhatsAppService, LogisticsService, SyncService, GovernanceService } from '@/services/api';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import CallOverlay from '@/components/CallOverlay';
 import WelcomeTour from '@/components/onboarding/WelcomeTour';
 import { IdentityService, MonitoringService } from '@/services/api';
+const MapView = dynamic(() => import('@/components/map/MapView'), { ssr: false });
 
 const VEHICLE_OPTIONS: { type: VehicleType; label: string; icon: string; desc: string }[] = [
   { type: 'economy', label: 'Economy', icon: '🚗', desc: 'Affordable & reliable' },
@@ -22,7 +23,7 @@ const VEHICLE_OPTIONS: { type: VehicleType; label: string; icon: string; desc: s
 ];
 
 export default function RiderHome() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
@@ -45,19 +46,25 @@ export default function RiderHome() {
   const journeyId = searchParams.get('journeyId');
   const [journey, setJourney] = useState<any>(null);
   const [showTour, setShowTour] = useState(false);
+  const [proposals, setProposals] = useState<any[]>([]);
 
   useEffect(() => {
-    if (user) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (profile) {
       // Check onboarding status
-      if (!user.onboarding_completed) {
+      if (!profile.onboarding_completed) {
         setShowTour(true);
       }
     }
-  }, [user]);
+  }, [profile]);
 
   useEffect(() => {
     if (user) {
       RewardsService.getPoints(user.id).then(setRewards);
+      GovernanceService.getProposals().then(setProposals).catch(console.error);
     }
   }, [user]);
 
@@ -83,7 +90,7 @@ export default function RiderHome() {
     const link = WhatsAppService.generateTripShareLink({
       driverName: matchedDriver.name,
       vehiclePlate: matchedDriver.vehicle.plateNumber,
-      destination: dropoff.name,
+      destination: dropoff.name || 'Unknown',
       liveLocationUrl: 'https://mzansijourney.co.za/track/' + activeTripId,
       shieldStatus: 'ACTIVE (Co-op Verified)'
     });
@@ -366,7 +373,7 @@ export default function RiderHome() {
         </div>
 
         {/* SOS Panic Button (Active during trips) */}
-        {(step === 'matched' || step === 'accepted') && (
+        {(step === 'matched') && (
           <div style={{
             position: 'absolute', top: '16px', left: '16px', zIndex: 100
           }}>
@@ -810,7 +817,7 @@ export default function RiderHome() {
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
                 <div className="avatar avatar-lg">
-                  {matchedDriver.name.split(' ').map(n => n[0]).join('')}
+                  {matchedDriver.name.split(' ').map((n: string) => n[0]).join('')}
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

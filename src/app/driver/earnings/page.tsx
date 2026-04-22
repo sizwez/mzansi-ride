@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { DollarSign, TrendingUp, Calendar, Download, ArrowUpRight, ArrowDownRight, CreditCard, Clock, Shield, Loader2 } from 'lucide-react';
+import { DollarSign, TrendingUp, Calendar, Download, ArrowUpRight, ArrowDownRight, CreditCard, Clock, Shield, Loader2, Wallet, PieChart, XCircle } from 'lucide-react';
 import { formatCurrency } from '@/lib/fare-calculator';
 import { useAuth } from '@/context/AuthContext';
 import { FinanceService, FintechService } from '@/services/api';
@@ -257,6 +257,7 @@ export default function DriverEarnings() {
               onClick={async () => {
                 setIsSubmitting(true);
                 try {
+                  if (!user) return;
                   await FintechService.requestPayout(user.id, parseFloat(payoutAmount), 'EFT', { bank: 'FNB', account: '****1234' });
                   alert('Payout request submitted successfully!');
                   setShowPayoutModal(false);

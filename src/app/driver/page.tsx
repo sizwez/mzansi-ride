@@ -6,7 +6,7 @@ import { Power, MapPin, Star, Shield, Clock, Navigation, Phone, MessageSquare, C
 import { SA_LOCATIONS } from '@/lib/mock-data';
 import { formatCurrency } from '@/lib/fare-calculator';
 import { useAuth } from '@/context/AuthContext';
-import { DriverService, NotificationService, SafetyService, VerificationService, RewardsService, CallService, GovernanceService } from '@/services/api';
+import { DriverService, NotificationService, SafetyService, VerificationService, RewardsService, CallService, GovernanceService, LogisticsService, WhatsAppService } from '@/services/api';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import CallOverlay from '@/components/CallOverlay';
@@ -213,13 +213,15 @@ export default function DriverDashboard() {
       );
 
       // NOTIFY DRIVER persistent
-      await NotificationService.createNotification(
-        user.id,
-        'Trip Completed',
-        `Successfully completed trip. Earnings added to your wallet.`,
-        'payment',
-        { trip_id: inProgressTrip.id }
-      );
+      if (user) {
+        await NotificationService.createNotification(
+          user.id,
+          'Trip Completed',
+          `Successfully completed trip. Earnings added to your wallet.`,
+          'payment',
+          { trip_id: inProgressTrip.id }
+        );
+      }
 
       setInProgressTrip(null);
       // Show success message or earnings update
@@ -243,7 +245,7 @@ export default function DriverDashboard() {
   const profileName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Driver';
 
   // Prepare map data
-  const mapDrivers = [{ id: user.id, lat: currentPos[0], lng: currentPos[1], rotation: 0 }];
+  const mapDrivers = user ? [{ id: user.id, lat: currentPos[0], lng: currentPos[1], rotation: 0 }] : [];
   const mapRoute: [number, number][] | undefined = inProgressTrip 
     ? [[currentPos[0], currentPos[1]], [inProgressTrip.pickup_lat, inProgressTrip.pickup_lng], [inProgressTrip.dropoff_lat, inProgressTrip.dropoff_lng]]
     : undefined;

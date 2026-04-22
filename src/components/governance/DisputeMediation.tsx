@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Gavel, AlertCircle, CheckCircle, Scale, MessageCircle, Info } from 'lucide-react';
-import { DisputeService } from '@/services/api';
+import { DisputeService, GovernanceService } from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
 import { formatCurrency } from '@/lib/fare-calculator';
 

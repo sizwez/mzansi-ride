@@ -102,8 +102,8 @@ export default function LoginPage() {
                     inputPlaceholder: 'var(--text-tertiary)',
                   },
                   radii: {
-                    buttonRadius: '12px',
-                    inputRadius: '12px',
+                    borderRadiusButton: '12px',
+                    inputBorderRadius: '12px',
                   },
                 },
               },

@@ -19,7 +19,7 @@ import { AssociationService } from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
 
 export default function AssociationPortal() {
-  const { user } = useAuth();
+  const { user, associationId: contextAssocId } = useAuth();
   const [stats, setStats] = useState<any>(null);
   const [members, setMembers] = useState<any[]>([]);
   const [routes, setRoutes] = useState<any[]>([]);
@@ -27,7 +27,7 @@ export default function AssociationPortal() {
 
   // In a real app, the associationId would be derived from the leader's profile
   // For the demo, we use a seed ID or fallback
-  const assocId = (user as any)?.association_id || 'sts-soweto-id-placeholder';
+  const assocId = contextAssocId || 'sts-soweto-id-placeholder';
 
   const fetchData = async () => {
     try {

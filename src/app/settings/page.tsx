@@ -36,7 +36,7 @@ const REGIONS = [
 ];
 
 export default function SettingsPortal() {
-  const { user, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
   const [lang, setLang] = useState<LangType>('en');
   const [region, setRegion] = useState('ZA');
   const [currency, setCurrency] = useState('ZAR');
@@ -45,12 +45,12 @@ export default function SettingsPortal() {
   const t = translations[lang] || translations.en;
 
   useEffect(() => {
-    if (user) {
-      setLang((user.preferred_language || 'en') as LangType);
-      setRegion(user.region_code || 'ZA');
-      setCurrency(user.currency || 'ZAR');
+    if (profile) {
+      setLang((profile.preferred_language || 'en') as LangType);
+      setRegion(profile.region_code || 'ZA');
+      setCurrency(profile.currency || 'ZAR');
     }
-  }, [user]);
+  }, [profile]);
 
   const handleSave = async () => {
     if (!user) return;
@@ -76,14 +76,14 @@ export default function SettingsPortal() {
       {/* Profile Section */}
       <div className="card-glass" style={{ padding: '20px', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '16px' }}>
          <div className="avatar avatar-lg">
-            {user?.name?.[0] || 'U'}
+            {profile?.name?.[0] || 'U'}
          </div>
          <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 700, fontSize: '1.125rem' }}>{user?.name}</div>
+            <div style={{ fontWeight: 700, fontSize: '1.125rem' }}>{profile?.name}</div>
             <div style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>{user?.email}</div>
          </div>
          <div style={{ padding: '8px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 600 }}>
-            {user?.role.toUpperCase()}
+            {profile?.role?.toUpperCase()}
          </div>
       </div>
 

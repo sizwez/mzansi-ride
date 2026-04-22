@@ -17,20 +17,20 @@ import { AssociationService } from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
 
 export default function DriverCompliance() {
-  const { user } = useAuth();
+  const { user, associationId } = useAuth();
   const [stats, setStats] = useState<any>(null);
   const [routes, setRoutes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
-    if (!user?.association_id) {
+    if (!associationId) {
        setLoading(false);
        return;
     }
     try {
       const [s, r] = await Promise.all([
-        AssociationService.getAssociationStats(user.association_id),
-        AssociationService.getAuthorizedRoutes(user.association_id)
+        AssociationService.getAssociationStats(associationId),
+        AssociationService.getAuthorizedRoutes(associationId)
       ]);
       setStats(s);
       setRoutes(r);
@@ -47,7 +47,7 @@ export default function DriverCompliance() {
 
   if (loading) return <div className="loading-state">...</div>;
 
-  if (!user?.association_id) {
+  if (!associationId) {
     return (
       <div className="page-enter" style={{ padding: '24px', textAlign: 'center' }}>
          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(244,169,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>

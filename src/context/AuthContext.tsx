@@ -9,6 +9,8 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   role: UserRole | null;
+  associationId: string | null;
+  profile: any | null;
   loading: boolean;
   signOut: () => Promise<void>;
 }
@@ -19,6 +21,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [role, setRole] = useState<UserRole | null>(null);
+  const [associationId, setAssociationId] = useState<string | null>(null);
+  const [profile, setProfile] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,7 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        fetchRole(session.user.id);
+        fetchProfile(session.user.id);
       } else {
         setLoading(false);
       }
@@ -39,9 +43,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        await fetchRole(session.user.id);
+        await fetchProfile(session.user.id);
       } else {
         setRole(null);
+        setAssociationId(null);
+        setProfile(null);
         setLoading(false);
       }
     });
@@ -51,19 +57,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  async function fetchRole(userId: string) {
+  async function fetchProfile(userId: string) {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('role')
+        .select('*')
         .eq('id', userId)
         .single();
       
       if (data) {
         setRole(data.role as UserRole);
+        setAssociationId(data.association_id);
+        setProfile(data);
       }
     } catch (err) {
-      console.error('Error fetching role:', err);
+      console.error('Error fetching profile:', err);
     } finally {
       setLoading(false);
     }
@@ -77,6 +85,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     session,
     role,
+    associationId,
+    profile,
     loading,
     signOut,
   };

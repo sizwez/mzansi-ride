@@ -20,6 +20,7 @@ interface Notification {
 
 interface NotificationContextType {
   showNotification: (n: Omit<Notification, 'id'>) => void;
+  showToast: (message: string, type?: NotificationType, title?: string) => void;
   notifications: Notification[];
   unreadCount: number;
   markAsRead: (id: string) => Promise<void>;
@@ -42,6 +43,14 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       setToasts(prev => prev.filter(n => n.id !== id));
     }, 5000);
   }, []);
+
+  const showToast = useCallback((message: string, type: NotificationType = 'info', title?: string) => {
+    showNotification({
+      type,
+      title: title || type.toUpperCase(),
+      message
+    });
+  }, [showNotification]);
 
   const fetchNotifications = useCallback(async () => {
     if (!user) return;
@@ -169,6 +178,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   return (
     <NotificationContext.Provider value={{ 
       showNotification, 
+      showToast,
       notifications: persistentNotifications, 
       unreadCount, 
       markAsRead, 

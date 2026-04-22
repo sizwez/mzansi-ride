@@ -48,7 +48,7 @@ const SECTIONS = [
 
 export default function MemberHandbook() {
   const [search, setSearch] = useState('');
-  const [activeSection, setActiveSection] = useState(null);
+  const [activeSection, setActiveSection] = useState<typeof SECTIONS[0] | null>(null);
 
   return (
     <div className="page-enter" style={{ minHeight: '100vh', background: '#0a0a0b', color: 'white', padding: '24px' }}>

@@ -1381,12 +1381,13 @@ export const AdminService = {
     // Get all verified drivers
     const { data: members, error } = await supabase
       .from('profiles')
-      .select('id, name, total_trips, trust_score')
+      .select('id, name, total_trips, trust_score, primary_rank_id')
       .eq('role', 'driver')
       .eq('verification_status', 'verified');
     
     if (error) throw error;
 
+    const totalTrips = members?.reduce((sum, m) => sum + (m.total_trips || 0), 0) || 0;
     if (totalTrips === 0) return { pool, distributions: [] };
 
     // 2. Fetch Rank Multipliers for performance-based weighting

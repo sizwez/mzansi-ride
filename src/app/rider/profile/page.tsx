@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 
 export default function RiderProfile() {
-  const { user, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
 
   if (!user) return null;
 
@@ -27,13 +27,13 @@ export default function RiderProfile() {
         textAlign: 'center',
       }}>
         <div className="avatar avatar-xl" style={{ margin: '0 auto 16px', fontSize: '1.5rem', background: 'var(--primary-light)', color: 'black' }}>
-          {user.name?.[0] || 'U'}
+          {profile?.name?.[0] || 'U'}
         </div>
         <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '4px' }}>
-          {user.name}
+          {profile?.name}
         </h2>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '16px' }}>
-          {user.verification_status === 'verified' && (
+          {profile?.verification_status === 'verified' && (
             <div className="badge badge-green" style={{ fontSize: '0.7rem' }}>
               <Shield size={10} /> Verified Member
             </div>
@@ -46,17 +46,17 @@ export default function RiderProfile() {
         }}>
           <div>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 800 }}>
-              <Star size={14} style={{ color: 'var(--gold)', display: 'inline', verticalAlign: 'middle' }} /> {user.rating || 5.0}
+              <Star size={14} style={{ color: 'var(--gold)', display: 'inline', verticalAlign: 'middle' }} /> {profile?.rating || 5.0}
             </div>
             <div style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)' }}>Rating</div>
           </div>
           <div>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 800 }}>{user.total_trips || 0}</div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 800 }}>{profile?.total_trips || 0}</div>
             <div style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)' }}>Trips</div>
           </div>
           <div>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 800 }}>
-              {new Date(user.joined_at).getFullYear()}
+              {profile?.joined_at ? new Date(profile.joined_at).getFullYear() : new Date().getFullYear()}
             </div>
             <div style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)' }}>Member since</div>
           </div>
@@ -69,7 +69,7 @@ export default function RiderProfile() {
           <Phone size={16} style={{ color: 'var(--text-tertiary)' }} />
           <div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Phone</div>
-            <div style={{ fontSize: '0.875rem', fontWeight: 500 }}>{user.phone || 'Not set'}</div>
+            <div style={{ fontSize: '0.875rem', fontWeight: 500 }}>{profile?.phone || 'Not set'}</div>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
