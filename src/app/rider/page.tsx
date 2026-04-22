@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { Search, MapPin, ChevronRight, Star, Shield, Clock, Navigation, X, Car, AlertTriangle, Phone, Trophy, Scale, Package, Zap } from 'lucide-react';
 import { SA_LOCATIONS } from '@/lib/mock-data';
@@ -23,6 +23,14 @@ const VEHICLE_OPTIONS: { type: VehicleType; label: string; icon: string; desc: s
 ];
 
 export default function RiderHome() {
+  return (
+    <Suspense fallback={<div className="loading-state">...</div>}>
+      <RiderContent />
+    </Suspense>
+  );
+}
+
+function RiderContent() {
   const { user, profile } = useAuth();
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
