@@ -396,6 +396,19 @@ export const GovernanceService = {
     return data;
   },
 
+export const GovernanceService = {
+  /**
+   * Fetch all active proposals
+   */
+  async getProposals() {
+    const { data, error } = await supabase
+      .from('coop_proposals')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return data;
+  },
+
   /**
    * Cast a vote on a proposal (Democratic: 1 Member = 1 Vote)
    */
@@ -1756,4 +1769,6 @@ export const LogisticsService = {
     return DriverService.completeTrip(tripId, trip.rider_id, trip.fare_total);
   }
 };
+
+export * from './whatsapp';
 

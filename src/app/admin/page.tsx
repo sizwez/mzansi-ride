@@ -12,7 +12,8 @@ import {
   Tooltip, ResponsiveContainer, BarChart, Bar, 
   Cell 
 } from 'recharts';
-import { AdminService, formatCurrency } from '@/services/api';
+import { AdminService } from '@/services/api';
+import { formatCurrency } from '@/lib/fare-calculator';
 
 const FUND_DATA = [
   { month: 'Jan', balance: 45000, growth: 12 },
