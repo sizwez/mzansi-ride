@@ -27,7 +27,7 @@ export default function AssociationPortal() {
 
   // In a real app, the associationId would be derived from the leader's profile
   // For the demo, we use a seed ID or fallback
-  const assocId = user?.association_id || 'sts-soweto-id-placeholder';
+  const assocId = (user as any)?.association_id || 'sts-soweto-id-placeholder';
 
   const fetchData = async () => {
     try {
