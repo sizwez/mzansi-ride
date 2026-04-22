@@ -10,15 +10,32 @@ export default function AuthCallback() {
   useEffect(() => {
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (session) {
-        // Fetch role to redirect correctly
-        const { data } = await supabase
+        const userId = session.user.id;
+        
+        let { data: profile, error } = await supabase
           .from('profiles')
           .select('role')
-          .eq('id', session.user.id)
+          .eq('id', userId)
           .single();
+
+        if (error || !profile) {
+          const { data: newProfile, error: createError } = await supabase
+            .from('profiles')
+            .insert([{ id: userId, role: 'rider' }])
+            .select('role')
+            .single();
+          
+          if (createError) {
+            console.error('Failed to create profile:', createError);
+            router.push('/login');
+            return;
+          }
+          
+          profile = newProfile;
+        }
         
-        if (data?.role === 'driver') router.push('/driver');
-        else if (data?.role === 'admin') router.push('/admin');
+        if (profile?.role === 'driver') router.push('/driver');
+        else if (profile?.role === 'admin') router.push('/admin');
         else router.push('/rider');
       } else {
         router.push('/login');

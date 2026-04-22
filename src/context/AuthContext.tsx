@@ -65,11 +65,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .eq('id', userId)
         .single();
       
-      if (data) {
-        setRole(data.role as UserRole);
-        setAssociationId(data.association_id);
-        setProfile(data);
+      if (error || !data) {
+        const { data: newProfile, error: createError } = await supabase
+          .from('profiles')
+          .insert([{ id: userId, role: 'rider' }])
+          .select('*')
+          .single();
+        
+        if (createError) {
+          console.error('Profile creation error:', createError);
+          setLoading(false);
+          return;
+        }
+        
+        if (newProfile) {
+          setRole(newProfile.role as UserRole);
+          setAssociationId(newProfile.association_id);
+          setProfile(newProfile);
+        }
+        return;
       }
+
+      setRole(data.role as UserRole);
+      setAssociationId(data.association_id);
+      setProfile(data);
     } catch (err) {
       console.error('Error fetching profile:', err);
     } finally {
